@@ -1,0 +1,8 @@
+{
+    "legncc": {
+        "text": "go to math class tomorrow",
+        "voters": {
+            "204403520": -1
+        }
+    }
+}

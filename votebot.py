@@ -12,9 +12,19 @@ token = open("token.txt").read().replace('\n', '')
 print(url % (token, "getUpdates"))
 
 #parameters
-chat_id = ""
-max_value = 1024
-path = os.path.dirname(__file__)
+publicHelp = """
+`/propose [text]` - start a proposal
+`/unpropose [id]` - end a proposal
+`/help          ` - show this message
+additional commands available in private message
+"""
+
+privateHelp = """
+`/proposals` - list proposals
+`/yea [id] ` - agree
+`/nay [id] ` - disagree
+additional commands available in public message
+"""
 
 #requests stuff
 ConnectionError = requests.exceptions.ConnectionError
@@ -90,7 +100,7 @@ def loadVotes():
 def saveVotes(votes):
     #puts an aliases dict into a savefile
     voteFile = open(path + "/votes.txt", "w")
-    voteFile.write(json.dumps(votes))
+    voteFile.write(json.dumps(votes, indent=4))
     voteFile.close()
 
 def genID():
@@ -99,6 +109,8 @@ def genID():
         ID += chr(random.randint(97, 122))
     return ID
 
+path = os.path.dirname(__file__)
+chat_id = 0
 try:
     votes, ids = loadVotes()
 except:
@@ -134,9 +146,10 @@ while True:
                 if "from" in message.keys():
                     #find and store name of user
                     user = message['from']
-                    if user['id'] not in voters:
+                    if str(user['id']) not in voters:
                         continue
                 if chat['type'] in ("group", "supergroup"):
+                    print("recv public message")
                     if "text" in message.keys():
                         #get the text of the message
                         text = message['text']
@@ -150,7 +163,7 @@ while True:
                                 while voteID in votes.keys():
                                     voteID = genID()
                                 votes[voteID] = {'text': content, 'voters': {}}
-                                sendMessage("Started proposal with id: " + voteID)
+                                sendMessage("Started proposal with id: " + voteID + "\nPM @proposal_bot to vote")
                         elif "/unpropose" == text[:10]:
                             content = text[11:]
                             if content in votes.keys():
@@ -160,27 +173,33 @@ while True:
                             content = text[8:]
                             if content in votes.keys():
                                 voting = 0
-                                for vote in voters[content]['voters'].values():
+                                for vote in votes[content]['voters'].values():
                                     voting += vote
                                 sendMessage(content + " stands at " + str(voting))
+                        elif "/help" == text[:5]:
+                            sendMessage(publicHelp)
 
                 elif chat['type'] == "private":
+                    print("recv private message")
                     if "text" in message.keys():
                         text = message['text']
                         if "/proposals" == text[:10]:
                             propstr = ""
                             for key in votes.keys():
-                                propstr += key + ": " + votes[key]['text'] + '\n'
+                                propstr += '`' + key + "`: " + votes[key]['text'] + '\n'
                             sendMessage(propstr)
                         elif "/yea" == text[:4]:
                             content = text[5:]
                             if content in votes.keys():
-                                votes[content]['voters'][user['id']] = 1
+                                votes[content]['voters'][str(user['id'])] = 1
                                 sendMessage("Your vote has been cast")
                         elif "/nay" == text[:4]:
                             content = text[5:]
                             if content in votes.keys():
-                                votes[content]['voters'][user['id']] = -1
+                                votes[content]['voters'][str(user['id'])] = -1
                                 sendMessage("Your vote has been cast")
+                        elif "/help" == text[:5] or "/start" == text[:6]:
+                            sendMessage(privateHelp)
+
     except ConnectionError:
         print("ConnectionError") #should put stuff here but whatever
