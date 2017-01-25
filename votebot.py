@@ -202,6 +202,7 @@ while True:
                             content = text[11:]
                             try:
                                 vid, val = content.split()
+                                val = int(val)
                                 voting = 0
                                 for vote in votes[vid]['voters'].values():
                                     voting += vote
