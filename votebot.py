@@ -130,6 +130,7 @@ while True:
             if "message" in update.keys():
                 message = update['message']
                 chat = message['chat']
+                chat_id = chat['id']
                 if "from" in message.keys():
                     #find and store name of user
                     user = message['from']
