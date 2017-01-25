@@ -198,8 +198,20 @@ while True:
                             if content in votes.keys():
                                 votes[content]['voters'][str(user['id'])] = -1
                                 sendMessage("Your vote has been cast")
+                        elif "/setstatus" == text[:10]:
+                            content = text[11:]
+                            try:
+                                vid, val = content.split()
+                                voting = 0
+                                for vote in votes[vid]['voters'].values():
+                                    voting += vote
+                                votes[vid]['voters']['offset'] = val - voting
+                            except:
+                                pass
                         elif "/help" == text[:5] or "/start" == text[:6]:
                             sendMessage(privateHelp)
 
     except ConnectionError:
         print("ConnectionError") #should put stuff here but whatever
+    except:
+        print("Unknown error")
