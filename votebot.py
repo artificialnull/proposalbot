@@ -214,5 +214,7 @@ while True:
 
     except ConnectionError:
         print("ConnectionError") #should put stuff here but whatever
+    except KeyboardInterrupt:
+        raise SystemExit
     except:
         print("Unknown error")
