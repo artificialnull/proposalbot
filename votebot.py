@@ -204,9 +204,11 @@ while True:
                                 vid, val = content.split()
                                 val = int(val)
                                 voting = 0
-                                for vote in votes[vid]['voters'].values():
-                                    voting += vote
+                                for voter in votes[vid]['voters'].keys():
+                                    if voter != "offset":
+                                        voting += voters[vid]['votes'][voter]
                                 votes[vid]['voters']['offset'] = val - voting
+                                sendMessage("Set offset to " + str(val - voting))
                             except:
                                 pass
                         elif "/help" == text[:5] or "/start" == text[:6]:
