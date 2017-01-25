@@ -2,7 +2,8 @@
     "legncc": {
         "text": "go to math class tomorrow",
         "voters": {
-            "204403520": -1
+            "204403520": -1,
+            "offset": 0
         }
     }
 }

@@ -200,17 +200,15 @@ while True:
                                 sendMessage("Your vote has been cast")
                         elif "/setstatus" == text[:10]:
                             content = text[11:]
-                            try:
+                            if 1==1:
                                 vid, val = content.split()
                                 val = int(val)
                                 voting = 0
                                 for voter in votes[vid]['voters'].keys():
                                     if voter != "offset":
-                                        voting += voters[vid]['votes'][voter]
+                                        voting += votes[vid]['voters'][voter]
                                 votes[vid]['voters']['offset'] = val - voting
                                 sendMessage("Set offset to " + str(val - voting))
-                            except:
-                                pass
                         elif "/help" == text[:5] or "/start" == text[:6]:
                             sendMessage(privateHelp)
 
@@ -219,4 +217,4 @@ while True:
     except KeyboardInterrupt:
         raise SystemExit
     except:
-        print("Unknown error")
+        time.sleep(2)
