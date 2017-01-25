@@ -176,7 +176,7 @@ while True:
                             if content in votes.keys():
                                 votes[content]['voters'][user['id']] = 1
                                 sendMessage("Your vote has been cast")
-                        elif "/nay" == text[:4]
+                        elif "/nay" == text[:4]:
                             content = text[5:]
                             if content in votes.keys():
                                 votes[content]['voters'][user['id']] = -1
